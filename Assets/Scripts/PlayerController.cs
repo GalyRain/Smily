@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 1f;
+    [SerializeField] private int jump = 400;
     [SerializeField] private Animator animator;
 
     private Rigidbody2D _rigidBody;
@@ -48,7 +49,7 @@ public class PlayerController : MonoBehaviour
         _rigidBody.velocity = new Vector2(_horizontal * speed * Time.fixedDeltaTime * speedMultipllier, _rigidBody.velocity.y);
 
         if (_isJump) {
-            _rigidBody.AddForce(new Vector2(0f, 300f));
+            _rigidBody.AddForce(new Vector2(0f, jump));
             _isGround = false;
             _isJump = false;
         }
