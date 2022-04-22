@@ -8,53 +8,48 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private float maxDistance;
     [SerializeField] private LayerMask layerMask;
 
-    private Vector2 origin;
-    private Vector2 direction;
-    private EnemyController enemyController;
+    private EnemyController _enemyController;
+    private Vector2 _origin;
+    private Vector2 _direction;
 
-    private float currentHitDistance;
+    private float _currentHitDistance;
 
     private void Start()
     {
-        enemyController = GetComponent<EnemyController>();
+        _enemyController = GetComponent<EnemyController>();
     }
 
     private void Update()
     {
-        origin = transform.position;
+        _origin = transform.position;
 
-        if (enemyController.IsFacingRight)
-        {
-            direction = Vector2.right;
+        if (_enemyController.IsFacingRight) {
+
+            _direction = Vector2.right;
         }
-        else
-        {
-            direction = Vector2.left;
+        else {
+            _direction = Vector2.left;
         }
 
+        RaycastHit2D hit = Physics2D.CircleCast(_origin, circleRadius, _direction, maxDistance, layerMask);
 
-        RaycastHit2D hit = Physics2D.CircleCast(origin, circleRadius, direction, maxDistance, layerMask);
-
-        if (hit)
-        {
+        if (hit) {
             currentHitObject = hit.transform.gameObject;
-            currentHitDistance = hit.distance;
-            if (currentHitObject.CompareTag("Player"))
-            {
-                enemyController.StartChasingPlayer();
+            _currentHitDistance = hit.distance;
+            if (currentHitObject.CompareTag("Player")) {
+                _enemyController.StartChasingPlayer();
             }
         }
-        else
-        {
-            currentHitDistance = maxDistance;
+        else {
             currentHitObject = null;
+            _currentHitDistance = maxDistance;
         }
-    }
 
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Debug.DrawLine(origin, origin + direction * currentHitDistance);
-        Gizmos.DrawWireSphere(origin + direction * currentHitDistance, circleRadius);
+        Gizmos.DrawLine(_origin, _origin + _direction * _currentHitDistance);
+        Gizmos.DrawWireSphere(_origin + _direction * _currentHitDistance, circleRadius);
     }
 }
