@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int jump = 400;
     [SerializeField] private Transform playerModelTransform;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource jumpSound;
 
     private Rigidbody2D _rigidBody;
     private Finish _finish;
@@ -22,8 +23,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        _rigidBody = GetComponent<Rigidbody2D>();
         _finish = GameObject.FindGameObjectWithTag("Finish").GetComponent<Finish>();
+        _rigidBody = GetComponent<Rigidbody2D>();
         _leverArm = FindObjectOfType<LeverArm>();
     }
 
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("speedX", Mathf.Abs(_horizontal)); 
         if (Input.GetKey(KeyCode.W) && _isGround) {
             _isJump = true;
+            jumpSound.Play();
         }
         if (Input.GetKeyDown(KeyCode.F)) {
             if (_isFinish) {
