@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+
+    [SerializeField] private Transform enemuModelTransform;
+
     [SerializeField] private float walkDistance = 6f;
     [SerializeField] private float patrolSpeed = 1f;
     [SerializeField] private float chasingSpeed = 3f;
@@ -145,8 +148,8 @@ public class EnemyController : MonoBehaviour
     void Flip()
     {
         _isFacingRight = !_isFacingRight;
-        Vector3 playerScale = transform.localScale;
+        Vector3 playerScale = enemuModelTransform.localScale;
         playerScale.x *= -1;
-        transform.localScale = playerScale;
+        enemuModelTransform.localScale = playerScale;
     }
 }

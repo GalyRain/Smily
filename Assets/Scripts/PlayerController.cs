@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 1f;
     [SerializeField] private int jump = 400;
+    [SerializeField] private Transform playerModelTransform;
     [SerializeField] private Animator animator;
 
     private Rigidbody2D _rigidBody;
@@ -11,7 +12,6 @@ public class PlayerController : MonoBehaviour
     private LeverArm _leverArm;
 
     private float _horizontal = 0f;
-
     private bool _isFacingRight = true;
     private bool _isGround = false;
     private bool _isJump = false;
@@ -64,9 +64,9 @@ public class PlayerController : MonoBehaviour
     void Flip()
     {
         _isFacingRight = !_isFacingRight;
-        Vector3 playerScale = transform.localScale;
+        Vector3 playerScale = playerModelTransform.localScale;
         playerScale.x *= -1;
-        transform.localScale = playerScale;
+        playerModelTransform.localScale = playerScale;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -80,7 +80,6 @@ public class PlayerController : MonoBehaviour
     {
         LeverArm leverArmTemp = other.GetComponent<LeverArm>();
         if (other.CompareTag("Finish")) {
-            Debug.Log("Finish");
             _isFinish = true;
         }
         if (leverArmTemp != null) {
@@ -92,7 +91,6 @@ public class PlayerController : MonoBehaviour
     {
         LeverArm leverArmTemp = other.GetComponent<LeverArm>();
         if (other.CompareTag("Finish")) {
-            Debug.Log("Not Finish");
             _isFinish = false;
         }
         if (leverArmTemp != null) {
