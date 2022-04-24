@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform playerModelTransform;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource jumpSound;
+    [SerializeField] private FixedJoystick fixedJoystick;
+
 
     private Rigidbody2D _rigidBody;
     private Finish _finish;
@@ -21,21 +23,23 @@ public class PlayerController : MonoBehaviour
 
     const float speedMultipllier = 50f;
 
-    void Start()
+    private void Start()
     {
         _finish = GameObject.FindGameObjectWithTag("Finish").GetComponent<Finish>();
         _rigidBody = GetComponent<Rigidbody2D>();
         _leverArm = FindObjectOfType<LeverArm>();
     }
 
-    void Update()
+    private void Update()
     {
-        _horizontal = Input.GetAxis("Horizontal"); // -1, 1
+        //_horizontal = Input.GetAxis("Horizontal"); // -1, 1
+        _horizontal = fixedJoystick.Horizontal;
         animator.SetFloat("speedX", Mathf.Abs(_horizontal)); 
-        if (Input.GetKey(KeyCode.W) && _isGround) {
-            _isJump = true;
-            jumpSound.Play();
+
+        if (Input.GetKeyDown(KeyCode.W)) {
+            Jump();
         }
+
         if (Input.GetKeyDown(KeyCode.F)) {
             if (_isFinish) {
                 _finish.FinishLevel();
@@ -46,7 +50,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         _rigidBody.velocity = new Vector2(_horizontal * speed * Time.fixedDeltaTime * speedMultipllier, _rigidBody.velocity.y);
 
@@ -63,12 +67,20 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
     }
-    void Flip()
+    private void Flip()
     {
         _isFacingRight = !_isFacingRight;
         Vector3 playerScale = playerModelTransform.localScale;
         playerScale.x *= -1;
         playerModelTransform.localScale = playerScale;
+    }
+
+    public void Jump()
+    {
+        if (_isGround) {
+            _isJump = true;
+            jumpSound.Play();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
