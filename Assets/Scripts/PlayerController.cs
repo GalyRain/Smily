@@ -7,12 +7,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform playerModelTransform;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource jumpSound;
-    [SerializeField] private FixedJoystick fixedJoystick;
 
 
     private Rigidbody2D _rigidBody;
     private Finish _finish;
     private LeverArm _leverArm;
+    private FixedJoystick _fixedJoystick;
 
     private float _horizontal = 0f;
     private bool _isFacingRight = true;
@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _finish = GameObject.FindGameObjectWithTag("Finish").GetComponent<Finish>();
+        _fixedJoystick = GameObject.FindGameObjectWithTag("FixedJoystick").GetComponent<FixedJoystick>();
         _rigidBody = GetComponent<Rigidbody2D>();
         _leverArm = FindObjectOfType<LeverArm>();
     }
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //_horizontal = Input.GetAxis("Horizontal"); // -1, 1
-        _horizontal = fixedJoystick.Horizontal;
+        _horizontal = _fixedJoystick.Horizontal;
         animator.SetFloat("speedX", Mathf.Abs(_horizontal)); 
 
         if (Input.GetKeyDown(KeyCode.W)) {
@@ -41,12 +42,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.F)) {
-            if (_isFinish) {
-                _finish.FinishLevel();
-            } 
-            if (_isLeverArm) {
-                _leverArm.ActivateLeverArm();
-            }
+            Interact();
         }
     }
 
@@ -80,6 +76,18 @@ public class PlayerController : MonoBehaviour
         if (_isGround) {
             _isJump = true;
             jumpSound.Play();
+        }
+    }
+
+    public void Interact() 
+    {
+        if (_isFinish)
+        {
+            _finish.FinishLevel();
+        }
+        if (_isLeverArm)
+        {
+            _leverArm.ActivateLeverArm();
         }
     }
 
