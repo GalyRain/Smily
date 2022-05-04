@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class BD : MonoBehaviour
 {
-    DatabaseReference dbRef;
-    FirebaseAuth auth;
+    private DatabaseReference reference;
+    private FirebaseAuth auth;
     public Text text;
     public Text textInfo;
     public InputField email;
@@ -17,7 +17,7 @@ public class BD : MonoBehaviour
     private void Start()
     {
 
-        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
         auth = FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this,null);
@@ -39,13 +39,13 @@ public class BD : MonoBehaviour
         User user = new User(str, 15, "offline");
 
         string json = JsonUtility.ToJson(user);
-        dbRef.Child("users").Child(str).SetRawJsonValueAsync(json);
+        reference.Child("users").Child(str).SetRawJsonValueAsync(json);
         // dbRef.Child("users").SetValueAsync(str); //  одно значение
     }
 
     public IEnumerator LoadData(string str)
     {
-        var user = dbRef.Child("users").Child(str).GetValueAsync();
+        var user = reference.Child("users").Child(str).GetValueAsync();
 
         yield return new WaitUntil(predicate: () => user.IsCompleted);
 
@@ -64,12 +64,12 @@ public class BD : MonoBehaviour
 
     public void RemoveData(string str) 
     {
-        dbRef.Child("users").Child(str).RemoveValueAsync();
+        reference.Child("users").Child(str).RemoveValueAsync();
     }
 
     public IEnumerator GetAllUser(string str) 
     {        
-        var users = dbRef.Child("users").OrderByChild("age").GetValueAsync();
+        var users = reference.Child("users").OrderByChild("age").GetValueAsync();
 
         yield return new WaitUntil(predicate: () => users.IsCompleted);
 
@@ -91,7 +91,7 @@ public class BD : MonoBehaviour
 
     public IEnumerator GetAllUserSort(string str) 
     {        
-        var users = dbRef.Child("users").OrderByChild("age").LimitToFirst(2).GetValueAsync();
+        var users = reference.Child("users").OrderByChild("age").LimitToFirst(2).GetValueAsync();
 
         yield return new WaitUntil(predicate: () => users.IsCompleted);
 
@@ -134,5 +134,4 @@ public class User
         this.age = age;
         this.status = status;
     }
-
 }

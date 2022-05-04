@@ -4,30 +4,30 @@ using UnityEngine.UI;
 public class ButtolController : MonoBehaviour
 {
     public InputField input;
-    private BD bd;
+    private BD database;
 
     void Start()
     {
-        bd = GetComponent<BD>();
+        database = GetComponent<BD>();
     }
     
     public void ButtonGet()
     {
-        StartCoroutine(bd.LoadData(input.text));
+        StartCoroutine(database.LoadData(input.text));
     }
 
     public void ButtonAdd()
     {
-        bd.SaveData(input.text);
+        database.SaveData(input.text);
     }
 
     public void ButtonRemove()
     {
-        bd.RemoveData(input.text);
+        database.RemoveData(input.text);
     }
 
     public void ButtonGetAllUser()
     {
-        StartCoroutine(bd.GetAllUser(input.text));
+        StartCoroutine(database.GetAllUser(input.text));
     }
 }
