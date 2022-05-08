@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void ExitButton()
+    public void QuitButton()
     {
         Application.Quit();
     }
